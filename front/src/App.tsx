@@ -10,7 +10,6 @@ import {fetchCoordinates} from "@/components/api"
 import MyMapComponent from './components/ui/mapComponent'
 
 function App() {
-
     const pickuplocationRef = useRef<HTMLInputElement | null>(null)
     const dropofflocationRef = useRef<HTMLInputElement | null>(null)
     const currentlocationRef = useRef<HTMLInputElement | null>(null)
@@ -35,7 +34,6 @@ function App() {
       if (currentlocationRef.current) currentlocationRef.current.value = ''
       if (currentcycleusingRef.current) currentcycleusingRef.current.value = ''
       
-      
       const response = await axiosInstance.post('http://localhost:8000/api/trip/',{
         "pickup_location":  pickuplocation,
         "dropoff_location":  dropofflocation,
@@ -56,40 +54,121 @@ function App() {
           console.error(error)
         }
       }
-
-
     }
     
   return (
     <>
-    
-      <div className='h-[700px] w-full flex-col justify-center items-center'>
-        <h1 className='text-5xl text-gray-900'>Welcome to Cycle-Safe</h1>
-        <Button variant="outline" className='w-32 h-12 text-lg' onClick={() => setStart(true)}>send</Button>
-      </div>
     {!display ? (
-      <form onSubmit={handleSubmit}>
-      <Card className='h-[700px] bg-gray-700/20 flex justify-center items-center'>
-        <Card  className='h-[400px] w-[400px] min-w-[250px] bg-gray-100/60 p-5 gap-5 flex-col items-center justify-center'>
-        {/* <Label> pickup location</Label> */}
-          <Input className='border border-gray-600/50 h-12' placeholder='pickup location' ref={pickuplocationRef}></Input>
-        {/* <Label>dropoff location</Label> */}
-          <Input className='border border-gray-600/50 h-12' placeholder='dropoff location'  ref={dropofflocationRef} ></Input>
-        {/* <Label>current location</Label> */}
-          <Input className='border border-gray-600/50 h-12' placeholder='current location'  ref={currentlocationRef} ></Input>
-        {/* <Label>current cycle using</Label> */}
-          <Input className='border border-gray-600/50 h-12' placeholder='count of current cycle'  ref={currentcycleusingRef}></Input>
-          <Button variant="outline" className='w-32 h-12 text-lg' type='submit'>send</Button>
-
+      <form onSubmit={handleSubmit} className="w-full min-h-screen p-4">
+        <Card className="
+          min-h-[700px]
+          min-w-[300px] 
+          bg-gray-700/20 
+          flex 
+          justify-center 
+          items-center 
+          px-4 
+          sm:px-6 
+          md:px-8 
+          lg:px-10
+        ">
+          <Card className="
+            w-full
+            max-w-[90%]
+            min-w-[280px]
+            sm:max-w-[450px]
+            md:max-w-[500px]
+            lg:max-w-[550px]
+            h-auto
+            min-h-[400px]
+            bg-gray-100/60 
+            p-4
+            sm:p-6
+            md:p-8
+            space-y-4
+            sm:space-y-6
+            flex
+            flex-col
+            items-center 
+            justify-center
+          ">
+            <Input 
+              className="
+                w-full
+                border 
+                border-gray-600/50 
+                h-12 
+                rounded-md
+                px-4
+                mb-4
+              " 
+              placeholder="pickup location" 
+              ref={pickuplocationRef}
+            />
+            <Input 
+              className="
+                w-full
+                border 
+                border-gray-600/50 
+                h-12 
+                rounded-md
+                px-4
+                mb-4
+              " 
+              placeholder="dropoff location" 
+              ref={dropofflocationRef}
+            />
+            <Input 
+              className="
+                w-full
+                border 
+                border-gray-600/50 
+                h-12 
+                rounded-md
+                px-4
+                mb-4
+              " 
+              placeholder="current location" 
+              ref={currentlocationRef}
+            />
+            <Input 
+              className="
+                w-full
+                border 
+                border-gray-600/50 
+                h-12 
+                rounded-md
+                px-4
+                mb-4
+              " 
+              placeholder="count of current cycle" 
+              ref={currentcycleusingRef}
+            />
+            <Button 
+              variant="outline" 
+              className="
+                w-full
+                sm:w-32 
+                h-12 
+                text-lg
+                transition-all
+                hover:bg-gray-200
+              " 
+              type="submit"
+            >
+              send
+            </Button>
+          </Card>
         </Card>
-      </Card>
-    </form>
-      ):(
-        mapData && <MyMapComponent pickupCoords={mapData.pickupCoords} dropoffCoords={mapData.dropoffCoords}></MyMapComponent>
-
-    )
-    }
-
+      </form>
+    ) : (
+      <div className="w-full h-screen">
+        {mapData && <MyMapComponent 
+          pickupCoords={mapData.pickupCoords} 
+          dropoffCoords={mapData.dropoffCoords}
+        />}
+      </div>
+    )}
     </>
   )
 }
