@@ -5,30 +5,38 @@ import { fetchRoute } from '@/components/api'
 
 const MyMapComponent: React.FC<{ 
   pickupCoords: { lat: number, lon: number }; 
-  dropoffCoords: { lat: number, lon: number } 
-}> = ({ pickupCoords, dropoffCoords }) => {
+  dropoffCoords: { lat: number, lon: number };
+  currentCoords: { lat: number, lon: number };
+}> = ({ pickupCoords, dropoffCoords, currentCoords }) => {
     const [routePoints, setRoutePoints] = useState<[number, number][]>([
         [pickupCoords.lat, pickupCoords.lon],
-        [dropoffCoords.lat, dropoffCoords.lon]
+        [dropoffCoords.lat, dropoffCoords.lon],
+    ]);
+    const [pickCurrPoints, setPickCurr] = useState<[number, number][]>([
+        [currentCoords.lat, currentCoords.lon],
+        [pickupCoords.lat, pickupCoords.lon],
     ]);
 
     useEffect(() => {
         const getRoute = async () => {
             try {
                 const points = await fetchRoute(pickupCoords, dropoffCoords);
+                const currentPonits = await fetchRoute(currentCoords, pickupCoords);
                 setRoutePoints(points);
+                setPickCurr(currentPonits);
             } catch (error) {
                 console.error('Error getting route:', error);
             }
         };
 
         getRoute();
-    }, [pickupCoords, dropoffCoords]);
+    }, [pickupCoords, dropoffCoords, currentCoords]);
 
     // Calculate bounds to fit both markers
     const bounds = [
         [pickupCoords.lat, pickupCoords.lon],
-        [dropoffCoords.lat, dropoffCoords.lon]
+        [dropoffCoords.lat, dropoffCoords.lon],
+        
     ];
 
     return (
@@ -43,6 +51,15 @@ const MyMapComponent: React.FC<{
                 />
                 <Marker position={[pickupCoords.lat, pickupCoords.lon]} />
                 <Marker position={[dropoffCoords.lat, dropoffCoords.lon]} />
+                <Marker position={[currentCoords.lat, currentCoords.lon]} />
+                <Polyline
+                    positions={pickCurrPoints}
+                    color='red'
+                    weight={3}
+                    opacity={0.7}
+                >
+
+                </Polyline>
                 <Polyline 
                     positions={routePoints}
                     color="blue"

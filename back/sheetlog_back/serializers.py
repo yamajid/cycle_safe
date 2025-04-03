@@ -9,7 +9,7 @@ class TripSerializer(serializers.ModelSerializer):
 
     def validate_pickup_location (self, value):
         if not get_localisation(value):
-            raise serializers.ValidationError('Invalid pickup location')
+            return serializers.ValidationError('Invalid pickup location')
         return value
     def validate_dropoff_location (self, value):
         if not get_localisation(value):
